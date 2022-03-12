@@ -1,0 +1,21 @@
+name: iml.env
+channels:
+  - defaults
+dependencies:
+  - nb_conda_kernels
+  - pandas
+  - scipy
+  - plotly
+  - psutil
+  - nb_conda
+  - requests
+  - numpy
+  - scikit-learn
+  - python=3.9.10
+  - plotly-orca
+  - statsmodels
+  - pip
+  - pip:
+    - gif
+    - kaleido
+    - pillow
