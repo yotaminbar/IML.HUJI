@@ -7,6 +7,7 @@ class UnivariateGaussian:
     """
     Class for univariate Gaussian Distribution Estimator
     """
+
     def __init__(self, biased_var: bool = False) -> UnivariateGaussian:
         """
         Estimator for univariate Gaussian mean and variance parameters
@@ -84,7 +85,7 @@ class UnivariateGaussian:
         if not self.fitted_:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
 
-        pdf_X = np.exp((-np.power((X - self.mu_), 2)) / (2*self.var_))
+        pdf_X = np.exp((-np.power((X - self.mu_), 2)) / (2 * self.var_))
         pdf_X /= np.sqrt(2 * np.pi * self.var_)
 
         return pdf_X
@@ -108,7 +109,7 @@ class UnivariateGaussian:
         log_likelihood: float
             log-likelihood calculated
         """
-        log_like = np.dot(X-mu, X-mu)  # sum of squared distances
+        log_like = np.dot(X - mu, X - mu)  # sum of squared distances
 
         log_like /= (- 2 * sigma)  # sigma is variance here and not sd
 
@@ -121,6 +122,7 @@ class MultivariateGaussian:
     """
     Class for multivariate Gaussian Distribution Estimator
     """
+
     def __init__(self):
         """
         Initialize an instance of multivariate Gaussian estimator
@@ -162,7 +164,7 @@ class MultivariateGaussian:
         """
         self.mu_ = X.sum(axis=0) / X.shape[0]
 
-        self.cov_ = np.dot((X-self.mu_).transpose(), (X-self.mu_)) / (X.shape[0] - 1)
+        self.cov_ = np.dot((X - self.mu_).transpose(), (X - self.mu_)) / (X.shape[0] - 1)
 
         self.fitted_ = True
         return self
@@ -188,8 +190,14 @@ class MultivariateGaussian:
         if not self.fitted_:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
 
-        return np.exp(np.dot((X - self.mu_), (np.dot(np.linalg.inv(self.cov_), (X - self.mu_))))/(-2)) /\
-               np.sqrt(np.power(2*np.pi, X.shape[1]) * np.linalg.det(self.cov_))
+        mult = -0.5
+        X_hat = X - self.mu_
+        cov_inverse = np.linalg.inv(self.cov_)
+        cov_det = np.linalg.det(self.cov_)
+        for vec in X_hat:
+            mult *= np.exp(np.dot(vec, np.dot(cov_inverse, vec)))
+
+        return mult / (np.power(np.sqrt(2 * np.pi * cov_det), X.shape[1]))
 
 
     @staticmethod
@@ -211,4 +219,12 @@ class MultivariateGaussian:
         log_likelihood: float
             log-likelihood calculated over all input data and under given parameters of Gaussian
         """
-        raise NotImplementedError()
+
+        scalar_sum = 0
+        cov_inverse = np.linalg.inv(cov)
+        cov_det = np.linalg.det(cov)
+        for sample in X:
+            X_hat = sample - mu
+            scalar_sum += np.dot(X_hat, np.dot(cov_inverse, X_hat))
+        return X.shape[0] * np.log(1 / np.sqrt(np.power(2 * np.pi, X.shape[1]) * cov_det)) - (scalar_sum / 2)
+

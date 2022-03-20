@@ -41,7 +41,9 @@ def test_univariate_gaussian():
 
 def test_multivariate_gaussian():
     # Question 4 - Draw samples and print fitted model
-    X = np.random.multivariate_normal([0, 0, 4, 0], [[1, 0.2, 0, 0.5], [0.2, 2, 0, 0], [0, 0, 1, 0], [0.5, 0, 0, 1]], 1000)
+    mu = np.array([0, 0, 4, 0])
+    cov = np.array([[1, 0.2, 0, 0.5], [0.2, 2, 0, 0], [0, 0, 1, 0], [0.5, 0, 0, 1]])
+    X = np.random.multivariate_normal(mu, cov, 1000)
     multivarite = MultivariateGaussian()
     multivarite.fit(X)
     print(multivarite.mu_)
@@ -49,10 +51,33 @@ def test_multivariate_gaussian():
 
 
     # Question 5 - Likelihood evaluation
-    raise NotImplementedError()
+    f1 = np.linspace(-10, 10, 200)
+    f3 = np.linspace(-10, 10, 200)
+
+    opacity = []
+    max_log_like = -np.inf
+
+    for val1 in f1:
+        for val3 in f3:
+            log_like = multivarite.log_likelihood(np.array([val1, 0, val3, 0]), cov, X)
+            if log_like > max_log_like:
+                max_log_like = log_like
+                max_f1 = val1
+                max_f3 = val3
+            opacity.append(log_like)
+
+    z1 = np.array(opacity).reshape(200, 200)
+
+    go.Figure(go.Heatmap(x=f1, y=f3, z=z1), layout=go.Layout(title="Heatmap", height=800, width=800,
+              yaxis_title="f_3 value",
+              xaxis_title="f_1 value")).show()
+
+    #opacity = multivarite.log_likelihood()
 
     # Question 6 - Maximum likelihood
-    raise NotImplementedError()
+    print("max log-likelihood is: " + str(max_log_like))
+    print("at f1: " + str(max_f1) + " and f3: " + str(max_f3))
+
 
 
 if __name__ == '__main__':
