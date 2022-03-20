@@ -13,7 +13,7 @@ def test_univariate_gaussian():
     print("(" + str(univariate.mu_) + ", " + str(univariate.var_) + ")")
 
     # Question 2 - Empirically showing sample mean is consistent
-    ms = np.linspace(10, 1000, 100).astype(np.int)
+    ms = np.linspace(10, 1000, 100).astype(int)
     mu = 10
     abs_distance = []
     for m in ms:
@@ -69,18 +69,18 @@ def test_multivariate_gaussian():
     z1 = np.array(opacity).reshape(200, 200)
 
     go.Figure(go.Heatmap(x=f1, y=f3, z=z1), layout=go.Layout(title="Heatmap", height=800, width=800,
-              yaxis_title="f_3 value",
-              xaxis_title="f_1 value")).show()
+              yaxis_title="f_1 value",
+              xaxis_title="f_3 value")).show()
 
     #opacity = multivarite.log_likelihood()
 
     # Question 6 - Maximum likelihood
     print("max log-likelihood is: " + str(max_log_like))
-    print("at f1: " + str(max_f1) + " and f3: " + str(max_f3))
+    print("at f1: " + str(int(max_f1 * 1000) / 1000.0) + " and f3: " + str(int(max_f3 * 1000) / 1000.0))
 
 
 
 if __name__ == '__main__':
     np.random.seed(0)
-    #test_univariate_gaussian()
+    test_univariate_gaussian()
     test_multivariate_gaussian()

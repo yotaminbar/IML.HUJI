@@ -220,11 +220,7 @@ class MultivariateGaussian:
             log-likelihood calculated over all input data and under given parameters of Gaussian
         """
 
-        scalar_sum = 0
-        cov_inverse = np.linalg.inv(cov)
-        cov_det = np.linalg.det(cov)
-        for sample in X:
-            X_hat = sample - mu
-            scalar_sum += np.dot(X_hat, np.dot(cov_inverse, X_hat))
-        return X.shape[0] * np.log(1 / np.sqrt(np.power(2 * np.pi, X.shape[1]) * cov_det)) - (scalar_sum / 2)
+        X_hat = X - mu
+        return X.shape[0] * np.log(1 / np.sqrt(np.power(2 * np.pi, X.shape[1]) * np.linalg.det(cov))) \
+               - (np.sum(X_hat @ np.linalg.inv(cov) * X_hat) / 2)
 
