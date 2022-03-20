@@ -109,7 +109,8 @@ class UnivariateGaussian:
         log_likelihood: float
             log-likelihood calculated
         """
-        log_like = np.dot(X - mu, X - mu)  # sum of squared distances
+        X_hat = X - mu
+        log_like = np.dot(X_hat, X_hat)  # sum of squared distances
 
         log_like /= (- 2 * sigma)  # sigma is variance here and not sd
 
