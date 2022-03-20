@@ -7,18 +7,46 @@ pio.templates.default = "simple_white"
 
 def test_univariate_gaussian():
     # Question 1 - Draw samples and print fitted model
-    raise NotImplementedError()
+    X = np.random.normal(10, 1, size=1000)
+    univariate = UnivariateGaussian()
+    univariate.fit(X)
+    print("(" + str(univariate.mu_) + ", " + str(univariate.var_) + ")")
 
     # Question 2 - Empirically showing sample mean is consistent
-    raise NotImplementedError()
+    ms = np.linspace(10, 1000, 100).astype(np.int)
+    mu = 10
+    abs_distance = []
+    for m in ms:
+        sampleSubset = X[:m]
+        univariate.fit(sampleSubset)
+        abs_distance.append(np.abs(mu - univariate.mu_))
+
+    go.Figure([go.Scatter(x=ms, y=abs_distance, mode='lines', name=r'$\widehat\mu$')],
+              layout=go.Layout(title=r"$\text{Absolute Distance between Estimator and Expectation"
+                                     r" as a Function of Sample Size}$",
+                               xaxis_title="$\\text{Number of Samples}$",
+                               yaxis_title="$\\text{Absolute distance}$",
+                               height=400)).show()
+
 
     # Question 3 - Plotting Empirical PDF of fitted model
-    raise NotImplementedError()
+    univariate.fit(X)
+    go.Figure([go.Scatter(x=X, y=univariate.pdf(X), mode='markers', name=r'$\widehat\mu$')],
+              layout=go.Layout(title=r"$\text{PDF of 1000 Drawn Samples"
+                                     r" as a Function of Sample Size}$",
+                               xaxis_title="$\\text{Sampled Value}$",
+                               yaxis_title="$\\text{Probability Density of Value}$",
+                               height=400)).show()
 
 
 def test_multivariate_gaussian():
     # Question 4 - Draw samples and print fitted model
-    raise NotImplementedError()
+    X = np.random.multivariate_normal([0, 0, 4, 0], [[1, 0.2, 0, 0.5], [0.2, 2, 0, 0], [0, 0, 1, 0], [0.5, 0, 0, 1]], 1000)
+    multivarite = MultivariateGaussian()
+    multivarite.fit(X)
+    print(multivarite.mu_)
+    print(multivarite.cov_)
+
 
     # Question 5 - Likelihood evaluation
     raise NotImplementedError()
@@ -29,5 +57,5 @@ def test_multivariate_gaussian():
 
 if __name__ == '__main__':
     np.random.seed(0)
-    test_univariate_gaussian()
+    #test_univariate_gaussian()
     test_multivariate_gaussian()

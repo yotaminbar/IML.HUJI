@@ -56,9 +56,9 @@ class UnivariateGaussian:
         self.var_ = np.dot(X - self.mu_, X - self.mu_)
 
         if self.biased_:
-            self.var_ *= 1 / len(X)
+            self.var_ /= len(X)
         else:
-            self.var_ *= 1 / (len(X) - 1)
+            self.var_ /= (len(X) - 1)
 
         self.fitted_ = True
         return self
@@ -160,7 +160,9 @@ class MultivariateGaussian:
         Sets `self.mu_`, `self.cov_` attributes according to calculated estimation.
         Then sets `self.fitted_` attribute to `True`
         """
-        raise NotImplementedError()
+        self.mu_ = X.sum(axis=0) / X.shape[0]
+
+        self.cov_ = np.dot((X-self.mu_).transpose(), (X-self.mu_)) / (X.shape[0] - 1)
 
         self.fitted_ = True
         return self
@@ -185,7 +187,10 @@ class MultivariateGaussian:
         """
         if not self.fitted_:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
-        raise NotImplementedError()
+
+        return np.exp(np.dot((X - self.mu_), (np.dot(np.linalg.inv(self.cov_), (X - self.mu_))))/(-2)) /\
+               np.sqrt(np.power(2*np.pi, X.shape[1]) * np.linalg.det(self.cov_))
+
 
     @staticmethod
     def log_likelihood(mu: np.ndarray, cov: np.ndarray, X: np.ndarray) -> float:
