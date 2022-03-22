@@ -54,7 +54,7 @@ class UnivariateGaussian:
         """
         self.mu_ = np.mean(X)
 
-        self.var_ = np.dot(X - self.mu_, X - self.mu_)
+        self.var_ = (X - self.mu_) @ (X - self.mu_)
 
         if self.biased_:
             self.var_ /= len(X)
@@ -85,10 +85,8 @@ class UnivariateGaussian:
         if not self.fitted_:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
 
-        pdf_X = np.exp((-np.power((X - self.mu_), 2)) / (2 * self.var_))
-        pdf_X /= np.sqrt(2 * np.pi * self.var_)
-
-        return pdf_X
+        X_hat = X - self.mu_
+        return np.exp((-(X_hat * X_hat)) / (2 * self.var_)) / np.sqrt(2 * np.pi * self.var_)
 
     @staticmethod
     def log_likelihood(mu: float, sigma: float, X: np.ndarray) -> float:
@@ -165,7 +163,7 @@ class MultivariateGaussian:
         """
         self.mu_ = X.sum(axis=0) / X.shape[0]
 
-        self.cov_ = np.dot((X - self.mu_).transpose(), (X - self.mu_)) / (X.shape[0] - 1)
+        self.cov_ = ((X - self.mu_).T @ (X - self.mu_)) / (X.shape[0] - 1)
 
         self.fitted_ = True
         return self
@@ -191,14 +189,15 @@ class MultivariateGaussian:
         if not self.fitted_:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
 
-        mult = -0.5
         X_hat = X - self.mu_
-        cov_inverse = np.linalg.inv(self.cov_)
-        cov_det = np.linalg.det(self.cov_)
-        for vec in X_hat:
-            mult *= np.exp(np.dot(vec, np.dot(cov_inverse, vec)))
-
-        return mult / (np.power(np.sqrt(2 * np.pi * cov_det), X.shape[1]))
+        return np.exp((-0.5) * np.sum(X_hat @ np.linalg.inv(self.cov_) * X_hat, axis=1)) \
+               / np.sqrt(np.power(2 * np.pi, X.shape[1]) * np.linalg.det(self.cov_))
+        # pdfs = []
+        # for sample in X:
+        #     pdfs.append(np.exp((-0.5) * ((sample - self.mu_) @ np.linalg.inv(self.cov_) @ (sample - self.mu_))) \
+        #                 / np.sqrt(np.power(2 * np.pi, X.shape[1]) * np.linalg.det(self.cov_)))
+        #
+        # return pdfs
 
 
     @staticmethod
@@ -224,4 +223,3 @@ class MultivariateGaussian:
         X_hat = X - mu
         return X.shape[0] * np.log(1 / np.sqrt(np.power(2 * np.pi, X.shape[1]) * np.linalg.det(cov))) \
                - (np.sum(X_hat @ np.linalg.inv(cov) * X_hat) / 2)
-

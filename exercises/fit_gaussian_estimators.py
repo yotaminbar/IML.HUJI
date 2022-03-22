@@ -81,7 +81,42 @@ def test_multivariate_gaussian():
 
 
 
+def private_tests():
+
+    # test mult guassian
+    mu = [0, 1]
+    sigma = [[1, 0.5],
+             [0.5, 1]]
+    S = np.random.multivariate_normal(mu, sigma,6)
+
+    multi = MultivariateGaussian()
+    multi.fit(S)
+    print(S)
+    multi.mu_ = [0,1]
+    print(multi.pdf(S))
+    print(multi.mu_)
+
+
+
+
+    # go.Figure([go.Scatter(x=S[:,0], y=multi.pdf(S)[:,0], mode='markers', name=r'$\widehat\mu$')],
+    #           layout=go.Layout(title=r"$\text{PDF of 1000 Drawn Samples"
+    #                                  r" as a Function of Sample Size}$",
+    #                            xaxis_title="$\\text{Sampled Value}$",
+    #                            yaxis_title="$\\text{Probability Density of Value}$",
+    #                            height=400)).show()
+    #
+    # go.Figure([go.Scatter(x=S[:,1], y=multi.pdf(S)[:,1], mode='markers', name=r'$\widehat\mu$')],
+    #           layout=go.Layout(title=r"$\text{PDF of 1000 Drawn Samples"
+    #                                  r" as a Function of Sample Size}$",
+    #                            xaxis_title="$\\text{Sampled Value}$",
+    #                            yaxis_title="$\\text{Probability Density of Value}$",
+    #                            height=400)).show()
+
+
 if __name__ == '__main__':
     np.random.seed(0)
-    test_univariate_gaussian()
-    test_multivariate_gaussian()
+    # test_univariate_gaussian()
+    # test_multivariate_gaussian()
+
+    private_tests()
