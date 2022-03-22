@@ -21,19 +21,18 @@ def test_univariate_gaussian():
         univariate.fit(sampleSubset)
         abs_distance.append(np.abs(mu - univariate.mu_))
 
-    go.Figure([go.Scatter(x=ms, y=abs_distance, mode='lines', name=r'$\widehat\mu$')],
+    go.Figure([go.Scatter(x=ms, y=abs_distance, mode='lines', name=r'$|\mu - \widehat\mu|$'),
+               go.Scatter(x=ms, y=[0]*len(ms), mode='lines', name=r'$0$')],
               layout=go.Layout(title=r"$\text{Absolute Distance between Estimator and Expectation"
                                      r" as a Function of Sample Size}$",
                                xaxis_title="$\\text{Number of Samples}$",
                                yaxis_title="$\\text{Absolute distance}$",
                                height=400)).show()
 
-
     # Question 3 - Plotting Empirical PDF of fitted model
     univariate.fit(X)
     go.Figure([go.Scatter(x=X, y=univariate.pdf(X), mode='markers', name=r'$\widehat\mu$')],
-              layout=go.Layout(title=r"$\text{PDF of 1000 Drawn Samples"
-                                     r" as a Function of Sample Size}$",
+              layout=go.Layout(title=r"$\text{PDF of 1000 Drawn Samples}$",
                                xaxis_title="$\\text{Sampled Value}$",
                                yaxis_title="$\\text{Probability Density of Value}$",
                                height=400)).show()
@@ -48,7 +47,6 @@ def test_multivariate_gaussian():
     multivarite.fit(X)
     print(multivarite.mu_)
     print(multivarite.cov_)
-
 
     # Question 5 - Likelihood evaluation
     f1 = np.linspace(-10, 10, 200)
@@ -72,51 +70,13 @@ def test_multivariate_gaussian():
               yaxis_title="f_1 value",
               xaxis_title="f_3 value")).show()
 
-    #opacity = multivarite.log_likelihood()
-
     # Question 6 - Maximum likelihood
     print("max log-likelihood is: " + str(max_log_like))
 
     print("at f1: " + str(int(max_f1 * 1000) / 1000.0) + " and f3: " + str(int(max_f3 * 1000) / 1000.0))
 
 
-
-def private_tests():
-
-    # test mult guassian
-    mu = [0, 1]
-    sigma = [[1, 0.5],
-             [0.5, 1]]
-    S = np.random.multivariate_normal(mu, sigma,6)
-
-    multi = MultivariateGaussian()
-    multi.fit(S)
-    print(S)
-    multi.mu_ = [0,1]
-    print(multi.pdf(S))
-    print(multi.mu_)
-
-
-
-
-    # go.Figure([go.Scatter(x=S[:,0], y=multi.pdf(S)[:,0], mode='markers', name=r'$\widehat\mu$')],
-    #           layout=go.Layout(title=r"$\text{PDF of 1000 Drawn Samples"
-    #                                  r" as a Function of Sample Size}$",
-    #                            xaxis_title="$\\text{Sampled Value}$",
-    #                            yaxis_title="$\\text{Probability Density of Value}$",
-    #                            height=400)).show()
-    #
-    # go.Figure([go.Scatter(x=S[:,1], y=multi.pdf(S)[:,1], mode='markers', name=r'$\widehat\mu$')],
-    #           layout=go.Layout(title=r"$\text{PDF of 1000 Drawn Samples"
-    #                                  r" as a Function of Sample Size}$",
-    #                            xaxis_title="$\\text{Sampled Value}$",
-    #                            yaxis_title="$\\text{Probability Density of Value}$",
-    #                            height=400)).show()
-
-
 if __name__ == '__main__':
     np.random.seed(0)
-    # test_univariate_gaussian()
-    # test_multivariate_gaussian()
-
-    private_tests()
+    test_univariate_gaussian()
+    test_multivariate_gaussian()

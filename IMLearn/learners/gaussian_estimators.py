@@ -223,3 +223,4 @@ class MultivariateGaussian:
         X_hat = X - mu
         return X.shape[0] * np.log(1 / np.sqrt(np.power(2 * np.pi, X.shape[1]) * np.linalg.det(cov))) \
                - (np.sum(X_hat @ np.linalg.inv(cov) * X_hat) / 2)
+
