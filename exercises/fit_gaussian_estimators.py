@@ -73,7 +73,7 @@ def test_multivariate_gaussian():
     # Question 6 - Maximum likelihood
     print("max log-likelihood is: " + str(max_log_like))
 
-    print("at f1: " + str(int(max_f1 * 1000) / 1000.0) + " and f3: " + str(int(max_f3 * 1000) / 1000.0))
+    print("at f1: " + str(np.round(max_f1, decimals=3)) + " and f3: " + str(np.round(max_f3, decimals=3)))
 
 
 if __name__ == '__main__':
