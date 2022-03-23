@@ -108,13 +108,8 @@ class UnivariateGaussian:
             log-likelihood calculated
         """
         X_hat = X - mu
-        log_like = np.dot(X_hat, X_hat)  # sum of squared distances
 
-        log_like /= (- 2 * sigma)  # sigma is variance here and not sd
-
-        log_like = np.exp(log_like) / np.power(np.sqrt(2 * np.pi * sigma), len(X))
-
-        return log_like
+        return X.shape[0] * np.log(1 / np.sqrt(2 * np.pi * sigma)) - ((X_hat @ X_hat) / (2 * sigma))
 
 
 class MultivariateGaussian:
@@ -192,12 +187,6 @@ class MultivariateGaussian:
         X_hat = X - self.mu_
         return np.exp((-0.5) * np.sum(X_hat @ np.linalg.inv(self.cov_) * X_hat, axis=1)) \
                / np.sqrt(np.power(2 * np.pi, X.shape[1]) * np.linalg.det(self.cov_))
-        # pdfs = []
-        # for sample in X:
-        #     pdfs.append(np.exp((-0.5) * ((sample - self.mu_) @ np.linalg.inv(self.cov_) @ (sample - self.mu_))) \
-        #                 / np.sqrt(np.power(2 * np.pi, X.shape[1]) * np.linalg.det(self.cov_)))
-        #
-        # return pdfs
 
 
     @staticmethod

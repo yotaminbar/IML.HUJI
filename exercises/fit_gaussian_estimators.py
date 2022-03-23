@@ -43,10 +43,10 @@ def test_multivariate_gaussian():
     mu = np.array([0, 0, 4, 0])
     cov = np.array([[1, 0.2, 0, 0.5], [0.2, 2, 0, 0], [0, 0, 1, 0], [0.5, 0, 0, 1]])
     X = np.random.multivariate_normal(mu, cov, 1000)
-    multivarite = MultivariateGaussian()
-    multivarite.fit(X)
-    print(multivarite.mu_)
-    print(multivarite.cov_)
+    multivariate = MultivariateGaussian()
+    multivariate.fit(X)
+    print(multivariate.mu_)
+    print(multivariate.cov_)
 
     # Question 5 - Likelihood evaluation
     f1 = np.linspace(-10, 10, 200)
@@ -57,7 +57,7 @@ def test_multivariate_gaussian():
 
     for val1 in f1:
         for val3 in f3:
-            log_like = multivarite.log_likelihood(np.array([val1, 0, val3, 0]), cov, X)
+            log_like = multivariate.log_likelihood(np.array([val1, 0, val3, 0]), cov, X)
             if log_like > max_log_like:
                 max_log_like = log_like
                 max_f1 = val1
