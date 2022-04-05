@@ -1,4 +1,4 @@
-name: iml.env
+name: iml1.env
 channels:
   - defaults
 dependencies:
