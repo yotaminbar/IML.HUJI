@@ -87,6 +87,8 @@ if __name__ == '__main__':
 
     # Question 4 - Fitting model for different values of `k`
     X_train, y_train, X_test, y_test = split_train_test(isr_temp.DayOfYear, isr_temp.Temp, 0.75)
+    X_train = X_train.squeeze()
+    X_test = X_test.squeeze()
     k_loss = []
 
     for k in range(1, 11):
@@ -114,13 +116,14 @@ if __name__ == '__main__':
         data = daily_temp.drop(daily_temp.Country[daily_temp.Country != place].index)
         X_data = data.DayOfYear
         y_data = data.Temp
-        y.append(poltFitQ5.loss(X_data,y_data))
+        y.append(poltFitQ5.loss(X_data, y_data))
 
     px.bar(x=x, y=y, title="Prediction Loss from Model Fitted on Israeli Data, k= " + str(best_k),
            color=x).update_layout(
         yaxis_title="MSE Loss",
         xaxis_title="Country",
     ).show()
+
 
 
 
